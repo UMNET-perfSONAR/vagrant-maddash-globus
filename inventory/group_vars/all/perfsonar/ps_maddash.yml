@@ -1,0 +1,7 @@
+---
+# defaults file for perfsonar-maddash
+# perfsonar_maddash_remotes:
+
+perfsonar_maddash_remotes:
+   - state: [ present ]
+   - url: http://192.1.1.13:/home/vagrant/gridftp_config.json

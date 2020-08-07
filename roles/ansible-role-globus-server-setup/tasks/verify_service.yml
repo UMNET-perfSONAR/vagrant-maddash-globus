@@ -1,0 +1,8 @@
+# Verify globus-gridftp-server Service
+
+#- name: test0
+#  command: ps aux | grep globus-gridftp-server
+
+#- name: test1
+#  command: ps aux | grep myproxy-server
+

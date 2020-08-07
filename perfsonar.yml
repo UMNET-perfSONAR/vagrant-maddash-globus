@@ -1,0 +1,68 @@
+# perfsonar.yml main perfSONAR config
+
+- name: perfSONAR archives
+  tags: 
+    - archives
+  hosts:
+    - ps-archives
+  roles:
+    - ansible-role-perfsonar-archive
+
+- name: perfSONAR MadDash
+  tags: 
+    - maddash
+  hosts:
+    - ps-maddash
+  roles:
+    - ansible-role-perfsonar-maddash
+
+- name: perfSONAR testpoints
+  tags: 
+    - testpoints
+  hosts:
+    - ps-testpoints
+  roles:
+    - ansible-role-perfsonar-testpoint
+
+- name: perfSONAR toolkit
+  tags: 
+    - toolkits
+  hosts:
+    - ps-toolkits
+  roles:
+    - ansible-role-perfsonar-toolkit
+
+- name: perfSONAR ps-config-publishers
+  tags: 
+    - psconfig-publishers
+  hosts:
+    - ps-psconfig-publishers
+  roles:
+    - ansible-role-perfsonar-psconfig-publisher
+
+- name: perfSONAR ps-config-web-admin
+  tags: 
+    - psconfig-web-admin
+  hosts:
+    - ps-psconfig-web-admin
+  roles:
+    - ansible-role-perfsonar-psconfig-web-admin
+
+- name: Install globus, Globus Connect Server, and deplay an endpoint on host
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  #tasks:
+  #- name: "sudo to root"
+  #  command: /usr/bin/whoami
+
+  #vars:
+  #  endpoint_name: "gbs_endpoint"
+  #  is_public: "False"
+
+  tags:
+  - testpoints
+  hosts: 
+  - ps-testpoints
+  roles:
+   - ansible-role-globus-server-setup

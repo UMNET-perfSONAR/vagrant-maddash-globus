@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  author: Nathan Shepherd
+  description: Quickly configure a Globus GridFTP Server
+  company: University of Michigan
+
+  issue_tracker_url: https://github.com/nathanShepherd/ansible-role-globus-server-setup/issues
+
+  license: Apache
+
+  min_ansible_version: 1.2
+
+  github_branch: https://github.com/nathanShepherd/ansible-role-globus-server-setup
+
+  platforms:
+    - name: CentOS
+      version:
+      - 7
+
+  galaxy_tags:
+    - Globus
+    - Server 
+    - GridFTP
+    - Endpoint
+
+#dependencies:
+#  - Python2

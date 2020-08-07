@@ -1,0 +1,15 @@
+---
+# vars file for perfsonar-maddash
+# Variables defined in this file have precedence over a lot of other places
+# This means they cannot be overwritten in inventory or playbook.
+# See http://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
+perfsonar_bundle: maddash
+perfsonar_optional_packages:
+  - perfsonar-psconfig-maddash
+
+# List of perfSONAR services to check are running
+perfsonar_maddash_services:
+#  - "{{ perfsonar_testpoint_services }}"
+#  - cassandra
+#  - perfsonar-lscachedaemon
+#  - perfsonar-toolkit-config-daemon

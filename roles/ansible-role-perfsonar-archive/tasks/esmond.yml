@@ -1,0 +1,13 @@
+---
+# esmond.yml
+
+- name: Add write-access authorised IP addresses to esmond archive
+  tags: [ 'ps::config' ]
+  command: >
+    /usr/sbin/esmond_manage add_user_ip_address
+    "{{ auth.user }}" "{{ auth.address }}"
+  when:
+    - auth.state | default('present') == 'present'
+    - auth.user | default('') != ''
+
+# TODO add support for auth.state == 'absent'

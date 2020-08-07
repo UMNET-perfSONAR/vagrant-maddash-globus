@@ -1,0 +1,16 @@
+[all:vars]
+ansible_become=True
+ansible_become_user=root
+ansible_user=vagrant
+
+[ps-testpoints]
+192.1.1.14 endpoint_name="GlobusTestpoint" is_public="False"
+
+[ps-toolkits]
+192.1.1.14
+
+[ps-archives]
+192.1.1.13
+
+[ps-maddash]
+192.1.1.12

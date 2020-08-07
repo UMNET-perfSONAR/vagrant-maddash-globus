@@ -1,0 +1,15 @@
+---
+# tasks file for ansible-setup-globus-endpoint
+
+- name: Configure TCP ports for public access
+  include_tasks: open_TCP_ports.yml
+
+- name: Install Globus Connect Server
+  include_tasks: install_globus_server.yml
+
+- name: Create Endpoint
+  include_tasks: create_endpoint.yml
+
+- name: Verify globus-gridftp-server Service
+  include_tasks: verify_service.yml
+

@@ -1,0 +1,90 @@
+---
+# tasks file for perfsonar-testpoint
+
+#####
+# Load OS dependant variables
+#####
+# This needs to be done for all tags
+- name: Load variables based on OS type
+  tags: [ 'ps::install', 'ps::running', 'ps::config' ]
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+
+#####
+# Configuration part: ps::config tag
+#####
+# Remove any conflictuous /etc/hosts configuration
+- name: Make sure FQDN is not pointing to any localhost entry in /etc/hosts
+  tags: [ 'ps::config' ]
+  lineinfile:
+    dest: /etc/hosts
+    state: 'absent'
+    regexp: '127\.0\..*[\s]+{{ ansible_fqdn }}[\s]+.*'
+
+# NTP is essential for good measurements
+- name: Configure additional NTP servers
+  tags: [ 'ps::config' ]
+  blockinfile:
+    path: /etc/ntp.conf
+    block: |
+      server {{ item.hostname }} iburst
+    marker: "# {mark} ansible-role-perfsonar {{ item.name }}"
+  with_items: "{{ perfsonar_ntp_servers }}"
+  notify:
+    - restart ntp
+
+- name: Disable ssh root access
+  tags: [ 'ps::config' ]
+  lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin "
+    line: "PermitRootLogin no"
+  when: perfsonar_disable_root_ssh
+  notify:
+    - restart ssh
+
+- name: Configure LS registration
+  tags: [ 'ps::config' ]
+  include: lsregistration.yml
+
+- name: add/delete remote mesh configurations that have a valid URL and state
+  tags: [ 'ps::config' ]
+  include_tasks: psconfig_remotes.yml
+  with_items: "{{ perfsonar_psconfig_remote_remotes | default([]) }}"
+  when:
+    - item.url | default('') != ''
+    - item.state | default('present') in [ "absent", "present" ]
+
+- name: auth interfaces with measurement archives
+  tags: [ 'ps::config' ]
+  include_tasks: auth_interface.yml
+  with_items: "{{ ansible_all_ipv4_addresses | default([]) }}"
+  loop_control:
+    loop_var: auth_interface
+
+#####
+# Verifying part: ps::running tag
+#####
+# Make sure services are running, but first flush handlers to ensure services are restarted
+- meta: flush_handlers
+- name: Check that all perfSONAR services are running
+  tags: [ 'ps::running' ]
+  service:
+    name: "{{ item }}"
+    state: started
+  with_flattened:
+      - "{{ perfsonar_services }}"
+      - "{{ perfsonar_os_specific_services }}"
+
+# Run a few useful perfSONAR commands
+# TODO: How to handle errors gracefully?
+# i.e.: report the error, but do not stop playbook execution
+- name: Run pscheduler troubleshoot locally
+  tags: [ 'ps::running' ]
+  command: pscheduler troubleshoot
+  changed_when: False
+

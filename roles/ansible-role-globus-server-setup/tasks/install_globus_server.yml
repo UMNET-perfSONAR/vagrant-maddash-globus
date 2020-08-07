@@ -1,0 +1,52 @@
+
+# Install Globus Connect Server
+#- name: Request Globus Connect Server RPM and download into local directory
+#  get_url:
+#    url: https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo-latest.noarch.rpm
+#    dest: "{{ playbook_dir }}"
+
+- name: Add Globus key to local GPG keyring
+  rpm_key:
+    key: https://downloads.globus.org/toolkit/gt6/stable/repo/rpm/RPM-GPG-KEY-Globus
+
+- name: HTTP request Globus Connect Server RPM
+  get_url:
+    url: https://downloads.globus.org/toolkit/globus-connect-server/globus-connect-server-repo-latest.noarch.rpm
+    dest: /home/vagrant/
+
+- name: Install Globus Connect RPM
+  yum:
+    name: /home/vagrant/globus-connect-server-repo-latest.noarch.rpm
+  register: STDOUT
+- debug:
+    var: STDOUT
+
+- name: Request EPEL repository and download into local directory
+  get_url:
+    url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    dest: /home/vagrant/
+
+- name: Install EPEL
+  yum:
+    name: /home/vagrant/epel-release-latest-7.noarch.rpm
+  register: STDOUT
+- debug:
+    var: STDOUT
+
+- name: Install Prerequisite packages
+  yum:
+    name: yum-plugin-priorities
+    state: latest
+  register: STDOUT
+- debug:
+    var: STDOUT
+
+# ERROR: No package or distribution found ...
+- name: Install Globus Connect Server
+  yum:
+    name: globus-connect-server
+  register: STDOUT
+- debug:
+    var: STDOUT
+
+#?

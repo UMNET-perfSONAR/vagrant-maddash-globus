@@ -1,0 +1,29 @@
+# Create Globus Endpoint
+
+#- name: Configure endpoint name
+# Get name from user
+# http://docs.ansible.com/ansible/latest/user_guide/playbooks_prompts.html
+
+- debug:
+    var: "{{ endpoint_name }}"
+
+# Edit config file
+# http://docs.ansible.com/ansible/latest/modules/lineinfile_module.html
+
+- lineinfile:
+    path: /etc/globus-connect-server.conf
+    regexp: "^Name ="
+    line: 'Name = {{ endpoint_name }}'
+
+- lineinfile:
+    path: /etc/globus-connect-server.conf
+    regexp: "^Public ="
+    line: 'Public = {{ is_public }}'
+
+
+
+
+#- name: Setup server
+#  command: globus-connect-server-setup
+#  use expect prompts
+#  http://docs.ansible.com/ansible/latest/modules/expect_module.html

@@ -1,0 +1,17 @@
+---
+# tasks file for perfsonar-maddash
+
+- name: enable and start psconfig-maddash-agent
+  tags: [ 'ps::running' ]
+  systemd:
+    name: psconfig-maddash-agent
+    enabled: yes
+    state: started
+
+- name: add/delete remote mesh configurations that have a valid URL and state
+  tags: [ 'ps::config' ]
+  include_tasks: psconfig_remotes.yml
+  with_items: "{{ perfsonar_maddash_remotes | default([]) }}"
+  when:
+    - item.url | default('') != ''
+    - item.state | default('present') in [ "absent", "present" ]

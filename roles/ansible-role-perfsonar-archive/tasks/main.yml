@@ -1,0 +1,14 @@
+---
+# tasks file for perfsonar-archive
+
+- name: Configure esmond archive for perfSONAR
+  tags: [ 'ps::config' ]
+  command: /usr/lib/perfsonar/scripts/system_environment/configure_esmond new
+
+- name: Manage list of authorised IP addresses to esmond archive
+  tags: [ 'ps::config' ]
+  include_tasks: esmond.yml
+  with_items: "{{ perfsonar_archive_auth_list | default([]) }}"
+  loop_control:
+    loop_var: auth
+  when: auth.address | default('') != ''

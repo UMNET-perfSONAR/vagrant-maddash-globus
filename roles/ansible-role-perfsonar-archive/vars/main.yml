@@ -1,0 +1,12 @@
+---
+# vars file for perfsonar-archive
+# Variables defined in this file have precedence over a lot of other places
+# This means they cannot be overwritten in inventory or playbook.
+# See http://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
+perfsonar_bundle: esmond
+perfsonar_optional_packages:
+  - perfsonar-toolkit-compat-database
+  - esmond-database-postgresql95
+
+# List of perfSONAR services to check are running
+perfsonar_archive_services:

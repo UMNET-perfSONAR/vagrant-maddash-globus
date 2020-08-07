@@ -1,0 +1,7 @@
+---
+# vars file for perfsonar-psconfig-web-admin
+
+perfsonar_bundle: docker
+perfsonar_optional_packages:
+  - python-pip
+
